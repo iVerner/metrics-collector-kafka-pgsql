@@ -12,13 +12,11 @@ from kafka import KafkaProducer, KafkaConsumer
 from kafka.errors import NoBrokersAvailable
 import psycopg2
 
+logger = logging.getLogger('metrics-collector-kafka-pgsql.connections')
+
 
 class KafkaConnection:
     def __init__(self, config_path='config.ini'):
-        self.log = logging.getLogger('kafka_connection')
-        self.log.addHandler(logging.StreamHandler())
-        self.log.setLevel('INFO')
-
         config = ConfigParser()
         config.read(config_path)
 
@@ -36,41 +34,41 @@ class KafkaConnection:
         self.group_id = config.get('kafka', 'group_id', fallback='metrics-collector-group')
 
     def get_producer(self):
-        self.log.info(f'Connecting to Kafka server {self.bootstrap_server}...')
+        logger.info(f'Connecting to Kafka server {self.bootstrap_server}...')
         try:
             producer = KafkaProducer(bootstrap_servers=self.bootstrap_server,
                                      security_protocol="SSL",
                                      ssl_cafile=self.ssl_cafile,
                                      ssl_certfile=self.ssl_certfile,
                                      ssl_keyfile=self.ssl_keyfile)
-            pass
         except NoBrokersAvailable as e:
-            self.log.error(f'Error connecting to Kafka server {self.bootstrap_server}.')
-            raise e
+            logger.error(f'Error connecting to Kafka server {self.bootstrap_server}. Exiting.')
+            quit(1)
 
         return producer
 
     def get_consumer(self):
-        consumer = KafkaConsumer(
-            self.kafka_topic,
-            auto_offset_reset="earliest",
-            bootstrap_servers=self.bootstrap_server,
-            client_id=self.client_id,
-            group_id=self.group_id,
-            security_protocol="SSL",
-            ssl_cafile=self.ssl_cafile,
-            ssl_certfile=self.ssl_certfile,
-            ssl_keyfile=self.ssl_keyfile
-        )
+        logger.info(f'Connecting to Kafka server {self.bootstrap_server}...')
+        try:
+            consumer = KafkaConsumer(
+                self.kafka_topic,
+                auto_offset_reset="earliest",
+                bootstrap_servers=self.bootstrap_server,
+                client_id=self.client_id,
+                group_id=self.group_id,
+                security_protocol="SSL",
+                ssl_cafile=self.ssl_cafile,
+                ssl_certfile=self.ssl_certfile,
+                ssl_keyfile=self.ssl_keyfile
+            )
+        except NoBrokersAvailable as e:
+            logger.error(f'Error connecting to Kafka server {self.bootstrap_server}.')
+            raise e
         return consumer
 
 
 class PostgreSQLConnection:
     def __init__(self, config_path='config.ini'):
-        self.log = logging.getLogger('postgresql_connection')
-        self.log.addHandler(logging.StreamHandler())
-        self.log.setLevel('INFO')
-
         config = ConfigParser()
         config.read(config_path)
 
@@ -84,7 +82,11 @@ class PostgreSQLConnection:
 
         self.uri = f'postgres://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}?sslmode=require'
 
-        self.db_conn = psycopg2.connect(self.uri)
+        try:
+            self.db_conn = psycopg2.connect(self.uri)
+        except psycopg2.OperationalError as e:
+            logger.error(f'Error connecting to PostgreSQL server {self.host}:{self.port}.')
+            raise e
 
     def get_connection(self):
         return self.db_conn

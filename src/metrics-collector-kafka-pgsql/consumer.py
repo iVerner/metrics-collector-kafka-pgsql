@@ -11,12 +11,10 @@ from psycopg2.extras import RealDictCursor
 from connections import KafkaConnection, PostgreSQLConnection
 
 
-class DatabaseFiller:
-    def __init__(self, config_path='config.ini'):
+class MetricsConsumer:
+    def __init__(self, config_path):
         self.kafka_conn = KafkaConnection(config_path)
         self.consumer = self.kafka_conn.get_consumer()
-
-        print(self.consumer.subscription())
 
         self.postgres_conn = PostgreSQLConnection(config_path).db_conn
 
@@ -36,12 +34,3 @@ class DatabaseFiller:
 
                     print("Inserted: {}".format(msg.value))
                     self.consumer.commit()
-
-
-def main():
-    filler = DatabaseFiller('config.ini')
-    filler.start_loop()
-
-
-if __name__ == '__main__':
-    main()
