@@ -25,7 +25,7 @@ class MetricsConsumer:
                 for msg in msgs:
                     message = str(msg.value, 'utf-8')
                     try:
-                        cursor.execute(f"select * from insert_metrics(%s::json)", (message,))
+                        cursor.execute("select * from insert_metrics(%s::json)", (message,))
                     except Exception as exception:
                         logger.error("Error inserting: {} \n{}".format(msg.value, exception))
 
