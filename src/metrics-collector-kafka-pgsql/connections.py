@@ -3,14 +3,12 @@
 Make connections using config file.
 
 """
-# Standard library imports
 import logging
 from configparser import ConfigParser
 
-# Third party imports
-from kafka import KafkaProducer, KafkaConsumer
-from kafka.errors import NoBrokersAvailable
 import psycopg2
+from kafka import KafkaConsumer, KafkaProducer
+from kafka.errors import NoBrokersAvailable
 
 logger = logging.getLogger('metrics-collector-kafka-pgsql.connections')
 
@@ -20,11 +18,11 @@ class KafkaConnection:
         config = ConfigParser()
         config.read(config_path)
 
-        self.kafka_host = config.get('kafka', 'host', fallback='localhost')
-        self.kafka_port = int(config.get('kafka', 'port', fallback='9092'))
-        self.kafka_topic = config.get('kafka', 'topic', fallback='metrics_topic')
+        kafka_host = config.get('kafka', 'host', fallback='localhost')
+        kafka_port = int(config.get('kafka', 'port', fallback='9092'))
+        self.bootstrap_server = f'{kafka_host}:{kafka_port}'
 
-        self.bootstrap_server = f'{self.kafka_host}:{self.kafka_port}'
+        self.kafka_topic = config.get('kafka', 'topic', fallback='metrics_topic')
 
         self.ssl_cafile = config.get('kafka', 'ssl_cafile', fallback='ca.pem')
         self.ssl_certfile = config.get('kafka', 'ssl_certfile', fallback='service.cert')
@@ -41,9 +39,9 @@ class KafkaConnection:
                                      ssl_cafile=self.ssl_cafile,
                                      ssl_certfile=self.ssl_certfile,
                                      ssl_keyfile=self.ssl_keyfile)
-        except NoBrokersAvailable as e:
-            logger.error(f'Error connecting to Kafka server {self.bootstrap_server}. Exiting.')
-            quit(1)
+        except NoBrokersAvailable as exception:
+            logger.error(f'Error connecting to Kafka server {self.bootstrap_server}.')
+            raise exception
 
         return producer
 
@@ -61,9 +59,9 @@ class KafkaConnection:
                 ssl_certfile=self.ssl_certfile,
                 ssl_keyfile=self.ssl_keyfile
             )
-        except NoBrokersAvailable as e:
+        except NoBrokersAvailable as exception:
             logger.error(f'Error connecting to Kafka server {self.bootstrap_server}.')
-            raise e
+            raise exception
         return consumer
 
 
@@ -84,9 +82,6 @@ class PostgreSQLConnection:
 
         try:
             self.db_conn = psycopg2.connect(self.uri)
-        except psycopg2.OperationalError as e:
+        except psycopg2.OperationalError as exception:
             logger.error(f'Error connecting to PostgreSQL server {self.host}:{self.port}.')
-            raise e
-
-    def get_connection(self):
-        return self.db_conn
+            raise exception

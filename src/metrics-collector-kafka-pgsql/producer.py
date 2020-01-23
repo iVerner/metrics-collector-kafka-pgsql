@@ -3,23 +3,21 @@
 Make json with metrics and sends it to kafka.
 
 """
-# Standard library imports
-import logging
 import json
-from time import sleep
-from datetime import datetime, timezone
+import logging
 from configparser import ConfigParser
+from datetime import datetime, timezone
 from platform import node
+from time import sleep
 
-# Third party imports
 import psutil
 
-# Local application imports
-from connections import KafkaConnection
+from .connections import KafkaConnection
 
 NETWORK_STAT_COLLECT_TIMEOUT = 0.2
 
 logger = logging.getLogger('metrics-collector-kafka-pgsql.producer')
+
 
 class MetricsProducer:
     """
@@ -66,16 +64,14 @@ class MetricsProducer:
             elif key == 'disk':
                 disk_usage = psutil.disk_usage('/')
                 metrics['disk_usage'] = round((disk_usage.used / disk_usage.total) * 100, 1)  # Used disk on root partition in percent
-            else:
-                raise
         result['metrics'] = metrics
         return result
 
     def send_metrics(self):
         message = json.dumps(self.collect_metrics(), ensure_ascii=True)
         logger.info(f'Sending message: {message}')
-        # self.producer.send(self.kafka_topic, message.encode("utf-8"))
-        # self.producer.flush()
+        self.producer.send(self.kafka_connection.kafka_topic, message.encode("utf-8"))
+        self.producer.flush()
 
     def sleep(self):
         logger.info(f'Sleeping for {self.metrics_interval} seconds')

@@ -1,28 +1,28 @@
 """
 Main module
 """
-# Standard library imports
-import logging
 import argparse
+import logging
+import sys
 
-# Third party imports
-
-# Local application imports
-from producer import MetricsProducer
-from consumer import MetricsConsumer
+from .consumer import MetricsConsumer
+from .producer import MetricsProducer
 
 
 def main():
+    """
+    Main function
+    """
     logger = logging.getLogger('metrics-collector-kafka-pgsql')
     logger.setLevel(logging.DEBUG)
 
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
 
-    logger.addHandler(ch)
+    logger.addHandler(console_handler)
 
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument("start_mode", help="Mode: producer/consumer", type=str, choices=['producer', 'consumer'])
@@ -38,7 +38,7 @@ def main():
         worker = MetricsConsumer(args.config)
     else:
         logger.error(f'Unknown command {args.start_mode}. Exiting.')
-        quit(1)
+        sys.exit()
 
     worker.start_loop()
 

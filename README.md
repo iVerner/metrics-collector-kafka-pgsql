@@ -8,7 +8,7 @@ Consists of two components:
 * consumer, that receives data from kafka and sends it to postgresql 
 
 # Usage
-python metrics-collector.py [-h] [-c CONFIG] {producer,consumer}
+python metrics_collector.py [-h] [-c CONFIG] {producer,consumer}
 
 # Installing
 

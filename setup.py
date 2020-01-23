@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/iVerner/metrics-collector-kafka-pgsql",
     package_dir={'': 'src'},
-    packages=setuptools.find_packages(),
+    packages=["metrics-collector-kafka-pgsql"],  # setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
