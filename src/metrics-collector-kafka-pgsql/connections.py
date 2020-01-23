@@ -6,15 +6,16 @@ Make connections using config file.
 import logging
 from configparser import ConfigParser
 
-import psycopg2
 from kafka import KafkaConsumer, KafkaProducer
 from kafka.errors import NoBrokersAvailable
+
+import psycopg2
 
 logger = logging.getLogger('metrics-collector-kafka-pgsql.connections')
 
 
 class KafkaConnection:
-    def __init__(self, config_path='config.ini'):
+    def __init__(self, config_path):
         config = ConfigParser()
         config.read(config_path)
 
@@ -66,7 +67,7 @@ class KafkaConnection:
 
 
 class PostgreSQLConnection:
-    def __init__(self, config_path='config.ini'):
+    def __init__(self, config_path):
         config = ConfigParser()
         config.read(config_path)
 
