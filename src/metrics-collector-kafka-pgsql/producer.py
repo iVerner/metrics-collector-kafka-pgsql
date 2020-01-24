@@ -15,7 +15,7 @@ from .connections import KafkaConnection
 
 NETWORK_STAT_COLLECT_TIMEOUT = 0.2
 
-logger = logging.getLogger('metrics_collector_kafka_pgsql.producer')
+logger = logging.getLogger('metrics-collector-kafka-pgsql.producer')
 
 
 class MetricsProducer:

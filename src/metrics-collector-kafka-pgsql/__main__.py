@@ -13,7 +13,7 @@ def main():
     """
     Main function
     """
-    logger = logging.getLogger('metrics_collector_kafka_pgsql')
+    logger = logging.getLogger('metrics-collector-kafka-pgsql')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
