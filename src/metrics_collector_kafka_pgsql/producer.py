@@ -11,11 +11,11 @@ from time import sleep
 
 import psutil
 
-from connections import KafkaConnection
+from .connections import KafkaConnection
 
 NETWORK_STAT_COLLECT_TIMEOUT = 0.2
 
-logger = logging.getLogger('metrics-collector-kafka-pgsql.producer')
+logger = logging.getLogger('metrics_collector_kafka_pgsql.producer')
 
 
 class MetricsProducer:
@@ -54,16 +54,13 @@ class MetricsProducer:
                 network_usage_2 = psutil.net_io_counters()
                 # Network usage speed,  Kb/sec
                 network_metrics = {
-                    'network_sending': round((network_usage_2.bytes_sent - network_usage_1.bytes_sent) * (
-                                1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1),
-                    'network_receiving': round((network_usage_2.bytes_recv - network_usage_1.bytes_recv) * (
-                                1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1)
+                    'network_sending': round((network_usage_2.bytes_sent - network_usage_1.bytes_sent) * (1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1),
+                    'network_receiving': round((network_usage_2.bytes_recv - network_usage_1.bytes_recv) * (1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1)
                 }
                 metrics['network'] = network_metrics
             elif key == 'disk':
                 disk_usage = psutil.disk_usage('/')
-                metrics['disk_usage'] = round((disk_usage.used / disk_usage.total) * 100,
-                                              1)  # Used disk on root partition in percent
+                metrics['disk_usage'] = round((disk_usage.used / disk_usage.total) * 100, 1)  # Used disk on root partition in percent
         result['metrics'] = metrics
         return result
 

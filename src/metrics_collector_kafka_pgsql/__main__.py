@@ -1,20 +1,19 @@
-"""
-Main package module
-"""
+"""Main package module."""
+
 import argparse
 import logging
 import sys
 from configparser import ConfigParser
 
-from consumer import MetricsConsumer
-from producer import MetricsProducer
+from .consumer import MetricsConsumer
+from .producer import MetricsProducer
 
 
 def main():
     """
     Main function
     """
-    logger = logging.getLogger('metrics-collector-kafka-pgsql')
+    logger = logging.getLogger('metrics_collector_kafka_pgsql')
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()

@@ -5,9 +5,9 @@ import logging
 
 from psycopg2.extras import RealDictCursor
 
-from connections import KafkaConnection, PostgreSQLConnection
+from .connections import KafkaConnection, PostgreSQLConnection
 
-logger = logging.getLogger('metrics-collector-kafka-pgsql.consumer')
+logger = logging.getLogger('metrics_collector_kafka_pgsql.consumer')
 
 
 class MetricsConsumer:
@@ -28,8 +28,6 @@ class MetricsConsumer:
                         cursor.execute("select * from insert_metrics(%s::json)", (message,))
                     except Exception as exception:
                         logger.error("Error inserting: {} \n{}".format(msg.value, exception))
-
-                    _ = cursor.fetchone()
 
                     print("Inserted: {}".format(msg.value))
                     self.consumer.commit()

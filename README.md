@@ -7,10 +7,24 @@ Consists of two components:
 * producer, that collects metrics and sends it to kafka
 * consumer, that receives data from kafka and sends it to postgresql 
 
-# Usage
-python metrics_collector.py [-h] [-c CONFIG] {producer,consumer}
-
 # Installing
+
+Let's asumme you have installed Kafka and PostgreSQL.
+
+1. You have to install dependencies first because metrics-collector-kafka-pgsql package uploaded to test PyPI:
+    
+    python3 -m pip install kafka-python psycopg2 psutil
+
+2. Install python package metrics-collector-kafka-pgsql:
+
+    python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps metrics-collector-kafka-pgsql
+    
+3. Create the table "metrics_table" and function "insert_metrics" at PostgreSQL using scripts from directory sql/.
+4. Download files ca.pem, service.cert and service.key needed to SSL connection to Kafka
+5. Create configuration file
+
+# Usage
+python -m metrics-collector-kafka-pgsql [-h] [-c CONFIG] {producer,consumer}
 
 # Configuring
 

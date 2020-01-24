@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="metrics-collector-kafka-pgsql",
-    version="0.0.1",
+    name="metrics_collector_kafka_pgsql",
+    version="0.0.4",
     author="Ignat Kudryavtsev",
     author_email="ignat@ignat.tel",
     description="A small example package",
@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/iVerner/metrics-collector-kafka-pgsql",
     package_dir={'': 'src'},
-    packages=["metrics-collector-kafka-pgsql"],  # setuptools.find_packages(),
+    packages=["metrics_collector_kafka_pgsql"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
