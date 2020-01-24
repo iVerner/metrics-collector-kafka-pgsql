@@ -5,17 +5,17 @@ import logging
 
 from psycopg2.extras import RealDictCursor
 
-from .connections import KafkaConnection, PostgreSQLConnection
+from connections import KafkaConnection, PostgreSQLConnection
 
 logger = logging.getLogger('metrics-collector-kafka-pgsql.consumer')
 
 
 class MetricsConsumer:
-    def __init__(self, config_path):
-        self.kafka_conn = KafkaConnection(config_path)
+    def __init__(self, config):
+        self.kafka_conn = KafkaConnection(config)
         self.consumer = self.kafka_conn.get_consumer()
 
-        self.postgres_conn = PostgreSQLConnection(config_path).db_conn
+        self.postgres_conn = PostgreSQLConnection(config).db_conn
 
     def start_loop(self):
         cursor = self.postgres_conn.cursor(cursor_factory=RealDictCursor)

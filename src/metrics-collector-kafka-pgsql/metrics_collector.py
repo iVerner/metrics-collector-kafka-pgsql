@@ -1,12 +1,13 @@
 """
-Main module
+Main package module
 """
 import argparse
 import logging
 import sys
+from configparser import ConfigParser
 
-from .consumer import MetricsConsumer
-from .producer import MetricsProducer
+from consumer import MetricsConsumer
+from producer import MetricsProducer
 
 
 def main():
@@ -30,15 +31,23 @@ def main():
 
     args = parser.parse_args()
 
+    config = ConfigParser()
+    try:
+        with open(args.config) as config_file:
+            config.read_file(config_file)
+    except FileNotFoundError:
+        logger.error(f'Config file "{args.config}" not found. Exiting.')
+        sys.exit(1)
+
     if args.start_mode == 'producer':
         logger.info('Starting Metrics producer')
-        worker = MetricsProducer(args.config)
+        worker = MetricsProducer(config)
     elif args.start_mode == 'consumer':
         logger.info('Starting Metrics consumer')
-        worker = MetricsConsumer(args.config)
+        worker = MetricsConsumer(config)
     else:
         logger.error(f'Unknown command {args.start_mode}. Exiting.')
-        sys.exit()
+        sys.exit(1)
 
     worker.start_loop()
 

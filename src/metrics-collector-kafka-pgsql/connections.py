@@ -4,7 +4,6 @@ Make connections using config file.
 
 """
 import logging
-from configparser import ConfigParser
 
 from kafka import KafkaConsumer, KafkaProducer
 from kafka.errors import NoBrokersAvailable
@@ -15,10 +14,7 @@ logger = logging.getLogger('metrics-collector-kafka-pgsql.connections')
 
 
 class KafkaConnection:
-    def __init__(self, config_path):
-        config = ConfigParser()
-        config.read(config_path)
-
+    def __init__(self, config):
         kafka_host = config.get('kafka', 'host', fallback='localhost')
         kafka_port = int(config.get('kafka', 'port', fallback='9092'))
         self.bootstrap_server = f'{kafka_host}:{kafka_port}'
@@ -40,9 +36,9 @@ class KafkaConnection:
                                      ssl_cafile=self.ssl_cafile,
                                      ssl_certfile=self.ssl_certfile,
                                      ssl_keyfile=self.ssl_keyfile)
-        except NoBrokersAvailable as exception:
+        except NoBrokersAvailable:
             logger.error(f'Error connecting to Kafka server {self.bootstrap_server}.')
-            raise exception
+            raise
 
         return producer
 
@@ -60,17 +56,14 @@ class KafkaConnection:
                 ssl_certfile=self.ssl_certfile,
                 ssl_keyfile=self.ssl_keyfile
             )
-        except NoBrokersAvailable as exception:
+        except NoBrokersAvailable:
             logger.error(f'Error connecting to Kafka server {self.bootstrap_server}.')
-            raise exception
+            raise
         return consumer
 
 
 class PostgreSQLConnection:
-    def __init__(self, config_path):
-        config = ConfigParser()
-        config.read(config_path)
-
+    def __init__(self, config):
         self.host = config.get('postgresql', 'host', fallback='localhost')
         self.port = int(config.get('postgresql', 'port', fallback='5432'))
 
@@ -83,6 +76,6 @@ class PostgreSQLConnection:
 
         try:
             self.db_conn = psycopg2.connect(self.uri)
-        except psycopg2.OperationalError as exception:
+        except psycopg2.OperationalError:
             logger.error(f'Error connecting to PostgreSQL server {self.host}:{self.port}.')
-            raise exception
+            raise
