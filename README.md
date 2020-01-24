@@ -26,6 +26,8 @@ Let's asumme you have installed Kafka and PostgreSQL.
 # Usage
 python -m metrics-collector-kafka-pgsql [-h] [-c CONFIG] {producer,consumer}
 
+Example: python3 -m metrics-collector-kafka-pgsql consumer -c /path/to/config/file/config.ini
+
 # Configuring
 
 Configuration file format:
