@@ -7,7 +7,7 @@ from psycopg2.extras import RealDictCursor
 
 from .connections import KafkaConnection, PostgreSQLConnection
 
-logger = logging.getLogger('metrics-collector-kafka-pgsql.consumer')
+logger = logging.getLogger('metrics_collector_kafka_pgsql.consumer')
 
 
 class MetricsConsumer:

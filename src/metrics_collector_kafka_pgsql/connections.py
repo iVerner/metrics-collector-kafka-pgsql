@@ -10,7 +10,7 @@ from kafka.errors import NoBrokersAvailable
 
 import psycopg2
 
-logger = logging.getLogger('metrics-collector-kafka-pgsql.connections')
+logger = logging.getLogger('metrics_collector_kafka_pgsql.connections')
 
 
 class KafkaConnection:
@@ -25,7 +25,7 @@ class KafkaConnection:
         self.ssl_certfile = config.get('kafka', 'ssl_certfile', fallback='service.cert')
         self.ssl_keyfile = config.get('kafka', 'ssl_keyfile', fallback='service.key')
 
-        self.client_id = config.get('kafka', 'client_id', fallback='metrics-collector-kafka-pgsql-client')
+        self.client_id = config.get('kafka', 'client_id', fallback='metrics-collector-client')
         self.group_id = config.get('kafka', 'group_id', fallback='metrics-collector-group')
 
     def get_producer(self):

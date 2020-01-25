@@ -15,7 +15,7 @@ from .connections import KafkaConnection
 
 NETWORK_STAT_COLLECT_TIMEOUT = 0.2
 
-logger = logging.getLogger('metrics-collector-kafka-pgsql.producer')
+logger = logging.getLogger('metrics_collector_kafka_pgsql.producer')
 
 
 class MetricsProducer:
@@ -46,16 +46,17 @@ class MetricsProducer:
                 metrics['cpu_load'] = psutil.cpu_percent(interval=0.1)  # CPU load in percent
             elif key == 'memory':
                 memory_usage = psutil.virtual_memory()
-                metrics['memory_usage'] = round((memory_usage.used / memory_usage.total) * 100,
-                                                1)  # Used memory in percent
+                metrics['memory_usage'] = round((memory_usage.used / memory_usage.total) * 100, 1)  # Used memory in percent
             elif key == 'network':
                 network_usage_1 = psutil.net_io_counters()
                 sleep(NETWORK_STAT_COLLECT_TIMEOUT)
                 network_usage_2 = psutil.net_io_counters()
                 # Network usage speed,  Kb/sec
                 network_metrics = {
-                    'network_sending': round((network_usage_2.bytes_sent - network_usage_1.bytes_sent) * (1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1),
-                    'network_receiving': round((network_usage_2.bytes_recv - network_usage_1.bytes_recv) * (1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1)
+                    'network_sending': round(
+                        (network_usage_2.bytes_sent - network_usage_1.bytes_sent) * (1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1),
+                    'network_receiving': round(
+                        (network_usage_2.bytes_recv - network_usage_1.bytes_recv) * (1 / NETWORK_STAT_COLLECT_TIMEOUT) / 1024, 1)
                 }
                 metrics['network'] = network_metrics
             elif key == 'disk':
