@@ -24,9 +24,9 @@ Let's asumme you have installed Kafka and PostgreSQL.
 5. Create configuration file
 
 # Usage
-python -m metrics-collector-kafka-pgsql [-h] [-c CONFIG] {producer,consumer}
+metrics_collector [-h] [-c CONFIG] {producer,consumer}
 
-Example: python3 -m metrics-collector-kafka-pgsql consumer -c /path/to/config/file/config.ini
+Example: metrics-collector consumer -c /path/to/config/file/config.ini
 
 # Configuring
 
