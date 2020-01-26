@@ -11,7 +11,7 @@ Consists of two components:
 
 Let's asumme you have installed Kafka and PostgreSQL.
 
-1. You have to install dependencies first because metrics-collector-kafka-pgsql package uploaded to test PyPI:
+1. Install dependencies first because metrics-collector-kafka-pgsql package uploaded to test PyPI:
     
     python3 -m pip install kafka-python psycopg2 psutil
 
@@ -19,9 +19,9 @@ Let's asumme you have installed Kafka and PostgreSQL.
 
     python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps metrics-collector-kafka-pgsql
     
-3. Create the table "metrics_table" and function "insert_metrics" at PostgreSQL using scripts from directory sql/.
+3. Create the table "metrics_table" and function "insert_metrics" at PostgreSQL using scripts from src/templates/sql/ directory.
 4. Download files ca.pem, service.cert and service.key needed to SSL connection to Kafka
-5. Create configuration file
+5. Create configuration file. You can use template config file from /src/templates/ directory
 
 # Usage
 metrics_collector [-h] [-c CONFIG] {producer,consumer}

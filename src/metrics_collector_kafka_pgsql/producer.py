@@ -29,7 +29,7 @@ def collect_metrics(hostname, metrics_list):
         elif key == 'memory':
             # Used memory in percent
             memory_usage = psutil.virtual_memory()
-            metrics['memory_usage'] = round((memory_usage.used / memory_usage.total) * 100, 1)
+            metrics['memory_usage'] = memory_usage.percent
         elif key == 'network':
             # Network usage speed,  Kb/sec
             counters_1 = psutil.net_io_counters()
@@ -45,7 +45,7 @@ def collect_metrics(hostname, metrics_list):
         elif key == 'disk':
             # Used disk on root partition in percent
             disk_usage = psutil.disk_usage('/')
-            metrics['disk_usage'] = round((disk_usage.used / disk_usage.total) * 100, 1)
+            metrics['disk_usage'] = disk_usage.percent
     result['metrics'] = metrics
     return result
 
