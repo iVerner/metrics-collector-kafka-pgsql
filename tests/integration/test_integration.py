@@ -5,7 +5,7 @@ from metrics_collector_kafka_pgsql import connections
 
 def init_config():
     config = ConfigParser()
-    config.read("../../../config.ini")
+    config.read("tests/test_config.ini")
     return config
 
 

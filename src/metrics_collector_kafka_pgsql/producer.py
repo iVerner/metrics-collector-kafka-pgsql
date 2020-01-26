@@ -76,7 +76,7 @@ class MetricsProducer:
         self.producer.flush()
 
     def sleep(self):
-        logger.info(f'Sleeping for {self.metrics_interval} seconds')
+        logger.debug(f'Sleeping for {self.metrics_interval} seconds')
         sleep(self.metrics_interval)
 
     def start_loop(self):
