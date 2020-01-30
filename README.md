@@ -26,7 +26,7 @@ Let's asumme you have installed Kafka and PostgreSQL.
 # Usage
 metrics_collector [-h] [-c CONFIG] {producer,consumer}
 
-Example: metrics-collector consumer -c /path/to/config/file/config.ini
+Example: metrics_collector consumer -c /path/to/config/file/config.ini
 
 # Configuring
 
