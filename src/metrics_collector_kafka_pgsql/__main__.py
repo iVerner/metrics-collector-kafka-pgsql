@@ -24,7 +24,7 @@ def main():
 
     logger.addHandler(console_handler)
 
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(prog='metrics_collector', description='Process computer metrics.')
     parser.add_argument("start_mode", help="Mode: producer/consumer", type=str, choices=['producer', 'consumer'])
     parser.add_argument("-c", "--config", help="Path to config file", type=str, default='config.ini')
 
